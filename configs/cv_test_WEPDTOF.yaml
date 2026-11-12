@@ -1,0 +1,19 @@
+# Stage 2: leave-one-dataset-out fine-tuning. Train on HABBOF + CEPDOF, test on WEPDTOF.
+# (MW-R is not used: the Mirror Worlds video download is no longer accessible; WEPDTOF replaces it.)
+# Training videos follow RAPiD (CVPRW'20 Sec. 4.3 + its train.py): CEPDOF All_off and
+# IRfilter are excluded from training ("extremely low contrast"), HABBOF Lab1 is held out
+# (RAPiD's validation video). All videos are still used when a dataset is the test set.
+_base_: base.yaml
+name: cv_test_WEPDTOF
+train:
+  epochs: 10
+  batch_size: 32
+  lr: 1.25e-5                # 10x below pretraining; higher values overfit the few training rooms
+  save_epochs: [1, 10]       # epoch 1 is the 512-input WEPDTOF result in the README
+  init_from: runs/coco_pretrain_dla34_512/final.pth
+data:
+  train:
+    - {type: fisheye, dataset: HABBOF, exclude: [Lab1]}
+    - {type: fisheye, dataset: CEPDOF, exclude: [All_off, IRfilter]}
+  test:
+    - {type: fisheye, dataset: WEPDTOF}

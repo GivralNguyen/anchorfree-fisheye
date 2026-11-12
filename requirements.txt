@@ -1,0 +1,12 @@
+# PyTorch wheels built for CUDA 12.8; use the index that matches your driver if needed
+--extra-index-url https://download.pytorch.org/whl/cu128
+torch==2.8.0
+torchvision==0.23.0
+timm==1.0.19
+huggingface_hub<1.0
+numpy<2.3
+opencv-python-headless==4.11.0.86
+pycocotools==2.0.10
+pyyaml
+tqdm
+tensorboard

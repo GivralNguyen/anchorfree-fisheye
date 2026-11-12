@@ -1,0 +1,70 @@
+# Shared defaults. Every value is a starting point; override any key from the CLI: key.sub=value
+seed: 0
+output_root: runs
+
+input_size: 512          # training / test input (square, letterboxed)
+stride: 4
+max_objs: 128
+
+model:
+  backbone: dla34        # any timm features_only model with stride 4..32 maps
+  pretrained: true       # ImageNet weights from timm (only used without init_from)
+  dcn: true              # deformable convs in the DLA-up decoder: true/grid_sample | torchvision | false
+  head_conv: 256
+  angle_repr: tanh       # tanh | sincos (continuous (sin2t, cos2t) variant)
+  angle_range: 3.141592653589793   # theta_hat = range * tanh(t); <=0 -> unbounded
+
+loss:
+  hm_weight: 1.0
+  off_weight: 1.0
+  size_weight: 0.1
+  angle_weight: 0.1
+  angle_loss: periodic_smooth_l1   # also l1 | smooth_l1 | periodic_l1 | periodic_l2 | sincos_l1
+  angle_beta: 1.0        # smooth-L1 threshold in radians
+  focal_alpha: 2.0
+  focal_beta: 4.0
+
+augment:
+  scale_range: [0.6, 1.4]
+  shift: 0.1
+  rot_prob: 1.0          # probability of a random rotation
+  rot_range: 180.0       # degrees, uniform in [-r, r]
+  hflip: 0.5
+  vflip: 0.5
+  color_jitter: 0.4
+  min_box_size: 2.0
+  mask_outside_roi: true  # black out pixels outside ROI maps (WEPDTOF) during training
+
+train:
+  optimizer: adamw       # adamw | adam
+  lr: 1.25e-4            # at batch 32 (fisheye fine-tuning uses 1.25e-5, see configs/cv_test_*.yaml)
+  lr_ref_batch: 32       # lr is scaled linearly with batch_size / lr_ref_batch
+  weight_decay: 1.0e-4
+  batch_size: 32         # global (summed over processes)
+  epochs: 10
+  schedule: cosine       # cosine | step (x0.1 at milestones)
+  milestones: []
+  warmup_iters: 300
+  min_lr_ratio: 0.01
+  ema: true
+  ema_decay: 0.9998
+  amp: true              # bf16 autocast (deformable convs stay fp32)
+  grad_clip: 35.0
+  workers: 6
+  log_every: 50
+  sync_bn: false
+  resume: true
+  init_from: null
+
+eval:
+  interval: 0            # >0: also evaluate every N epochs (monitoring only)
+  batch_size: 16
+  ap_conf: 0.01          # score threshold for AP (RAPiD used 0.005)
+  conf: 0.3              # threshold for P / R / F1
+  save_dets: true
+
+data:
+  coco_root: data/coco          # paths are relative to the directory you run from (repo root)
+  fisheye_root: data/fisheye
+  train: []
+  test: []
