@@ -113,16 +113,16 @@ wget -P ../RAPiD/weights \
 
 ## Pretrained checkpoints
 
-Download from this repository's [Releases](../../releases) page into `weights/`. Each file
-holds the EMA weights and the config it was trained with.
+The checkpoints are included in [`weights/`](weights) (cloning the repository downloads them,
+about 400 MB in total). Each file holds the EMA weights and the config it was trained with.
 
-| File | Trained on | Results it gives |
-|---|---|---|
-| `coco_pretrain_dla34_512.pth` | COCO people (90 epochs) | COCO-pretrained table; starting point for fine-tuning |
-| `cv_test_HABBOF.pth` | COCO, then CEPDOF + WEPDTOF (10 epochs) | HABBOF rows |
-| `cv_test_CEPDOF.pth` | COCO, then HABBOF + WEPDTOF (10 epochs) | CEPDOF rows |
-| `cv_test_WEPDTOF.pth` | COCO, then HABBOF + CEPDOF (10 epochs) | WEPDTOF 1024 row, speed table, demo image |
-| `cv_test_WEPDTOF_epoch1.pth` | COCO, then HABBOF + CEPDOF (1 epoch) | WEPDTOF 512 row |
+| File | Size | Trained on | Results it gives |
+|---|---|---|---|
+| [`coco_pretrain_dla34_512.pth`](weights/coco_pretrain_dla34_512.pth) | 79.3 MB | COCO people (90 epochs) | COCO-pretrained table; starting point for fine-tuning |
+| [`cv_test_HABBOF.pth`](weights/cv_test_HABBOF.pth) | 79.2 MB | COCO, then CEPDOF + WEPDTOF (10 epochs) | HABBOF rows |
+| [`cv_test_CEPDOF.pth`](weights/cv_test_CEPDOF.pth) | 79.2 MB | COCO, then HABBOF + WEPDTOF (10 epochs) | CEPDOF rows |
+| [`cv_test_WEPDTOF.pth`](weights/cv_test_WEPDTOF.pth) | 79.2 MB | COCO, then HABBOF + CEPDOF (10 epochs) | WEPDTOF 1024 row, speed table, demo image |
+| [`cv_test_WEPDTOF_epoch1.pth`](weights/cv_test_WEPDTOF_epoch1.pth) | 79.3 MB | COCO, then HABBOF + CEPDOF (1 epoch) | WEPDTOF 512 row |
 
 ```bash
 # detect people in your own fisheye images (--heatmap also saves demo_heatmap.jpg)
@@ -276,6 +276,7 @@ configs/
 tools/
   train.py  evaluate.py  demo.py  eval_rapid.py  benchmark.py  prepare_data.py
   make_rotated_val.py  select_2fold.py  visualize.py
+weights/                released checkpoints
 scripts/reproduce.sh    the commands above, step by step
 tests/test_core.py      unit tests
 ```
